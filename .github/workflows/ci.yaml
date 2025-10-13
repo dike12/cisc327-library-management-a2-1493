@@ -32,7 +32,35 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pytest pytest-cov
-        pip install -r requirements.txt
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    
+    # 🔥 CRITICAL: Add database initialization
+    - name: Initialize test database
+      run: |
+        python -c "
+        from database import init_database, add_sample_data
+        init_database()
+        add_sample_data()
+        print('✅ Database initialized with sample data')
+        "
+    
+    # 🔥 OPTIONAL: Debug step to verify database
+    - name: Verify database setup
+      run: |
+        python -c "
+        from database import get_db_connection
+        conn = get_db_connection()
+        books = conn.execute('SELECT COUNT(*) as count FROM books').fetchone()['count']
+        patrons = conn.execute('SELECT COUNT(*) as count FROM patrons').fetchone()['count']
+        print(f'📊 Database contains: {books} books, {patrons} patrons')
+        
+        # Show sample books
+        sample_books = conn.execute('SELECT id, title, available_copies FROM books LIMIT 3').fetchall()
+        print('Sample books:')
+        for book in sample_books:
+            print(f'  - {book[0]}: {book[1]} (available: {book[2]})')
+        conn.close()
+        "
     
     - name: Run tests with coverage
       run: |
