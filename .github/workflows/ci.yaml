@@ -19,6 +19,10 @@ jobs:
     
     timeout-minutes: 10
 
+    defaults:
+      run:
+        shell: bash
+
     steps:
     - uses: actions/checkout@v4
     
