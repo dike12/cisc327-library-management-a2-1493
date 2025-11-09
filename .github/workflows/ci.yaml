@@ -59,8 +59,8 @@ jobs:
           EOF
     
     - name: Run tests with coverage
-      run: |
-        python -m pytest test/ -v --cov=./ --cov-report=xml
+      run: pytest --cov=services --cov-report=xml
+
     
     - name: Upload test results
       if: always()
