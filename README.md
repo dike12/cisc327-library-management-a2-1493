@@ -3,6 +3,8 @@
 ## Overview
 
 [![CI](https://github.com/dike12/cisc327-library-management-a2-1493/actions/workflows/ci.yaml/badge.svg)](https://github.com/dike12/cisc327-library-management-a2-1493/actions/workflows/ci.yaml)
+[![Coverage](coverage.svg)](https://github.com/dike12/cisc327-library-management-a2-1493/actions/workflows/ci.yaml)
+
 
 This project contains a partial implementation of a Flask-based Library Management System with SQLite database, designed for CISC 327 (Software Quality Assurance) coursework.
 

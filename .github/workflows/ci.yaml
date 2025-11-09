@@ -61,6 +61,37 @@ jobs:
     - name: Run tests with coverage
       run: |
         python -m pytest test/ -v --cov=./ --cov-report=xml
+
+
+          - name: Generate coverage badge
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        uses: tj-actions/coverage-badge-py@v2
+        with:
+          output: coverage.svg
+
+    - name: Verify Changed files
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+      uses: tj-actions/verify-changed-files@v20
+      id: verify-changed-files
+      with:
+        files: |
+          coverage.svg
+
+    - name: Commit coverage badge
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11' && steps.verify-changed-files.outputs.files_changed == 'true'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add coverage.svg
+        git commit -m "Update coverage badge"
+
+    - name: Push coverage badge
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11' && steps.verify-changed-files.outputs.files_changed == 'true'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+
     
     - name: Upload test results
       if: always()
